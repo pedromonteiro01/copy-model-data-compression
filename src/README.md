@@ -2,10 +2,10 @@
 
 Compile
 ```
-g++ hello.cpp -o hello
+g++ cpm.cpp -o cpm
 ```
 
 Just run the executable file
 ```
-./hello
+./cpm
 ```
