@@ -32,7 +32,7 @@ int main()
 {
     // cout << "Hello, World!\n";
     int k = 5; // k is the sliding window
-    string content = read_file("chry.txt"); // get file content
+    string content = read_file("test.txt"); // get file content
     std::map<std::string, std::vector<int>> hash_map; // create hashmap to store K strings and its positions
     for (int i = 0; i < content.size() - k + 1; ++i)
     {
