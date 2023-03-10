@@ -30,21 +30,30 @@ string read_file(string filename)
 
 int main()
 {
+    // cout << "Hello, World!\n";
     int k = 5; // k is the sliding window
     string content = read_file("chry.txt"); // get file content
     std::map<std::string, int> hash_map; // create hashmap to store K strings
-    for (int i = 0; i < content.size() - k + 1; ++i)
+    for (int i = 0; i < content.size()-k+1; ++i)
     {
         std::string substring = content.substr(i, k);
-        auto it = hash_map.find(substring);
-        if (it == hash_map.end())
+        if (hash_map.find(substring) != hash_map.end())
         {
-            cout << substring << endl; // if it is not in the hashmap, print it
-            hash_map[substring] = i; // add to hashmap
+            int first_position = hash_map[substring];
+            if (i + k < content.size())
+            {
+                char next_char = content[i+k];
+                cout << "Hit: " << substring << " (first appearance " << first_position << ") " << "Next char: " << next_char << endl;
+            }
+            else
+            {
+                cout << "Hit: " << substring << " " << first_position << " " << endl;
+            }
         }
         else
         {
-            cout << substring << " (first appeared at position " << it->second << ")" << endl;
+            cout << substring << endl;
+            hash_map[substring] = i; // add to hashmap
         }
     }
     return 0;
