@@ -44,7 +44,7 @@ char get_map_max_value(std::map<char, int> mymap) {
 }
 
 // Function to get the most frequent next character
-char predict_char(const std::vector<int> &positions, std::vector<std::string> &chunks) {
+/*char predict_char(const std::vector<int> &positions, std::vector<std::string> &chunks) {
     // Step 0: Initialize a counter for each symbol
     std::map<char, int> char_counter;
 
@@ -65,46 +65,93 @@ char predict_char(const std::vector<int> &positions, std::vector<std::string> &c
     char most_frequent_char = get_map_max_value(char_counter);
 
     return most_frequent_char;
+}*/
+
+char predict_char(const std::vector<int> &positions, std::vector<std::string> &chunks) {
+    // get first position of positions array
+    int first_pos = positions.front();
+
+    return chunks[first_pos + 1].back();
 }
 
-int main()
+int main(int argc, char* argv[])
 {
-    int k = 5; // k is the sliding window
-    int hits = 0; // hits
-    int fails = 0; // fails
-    string data = read_file("test.txt"); // get file data
-    std::map<std::string, std::vector<int>> chunk_positions; // create hashmap to store K strings and its positions
-    std::vector<std::string> chunks; // create vector to store the chunks
+    if (argc < 6) {
+        cout << "Usage: " << argv[0] << " <filename> <k> <alpha> <fail_threshold> <pause_threshold>" << endl;
+        return 1;
+    }
+
+    string filename = argv[1];
+    int k = std::stoi(argv[2]);
+    double alpha = atof(argv[3]);
+    int fail_threshold = std::stoi(argv[4]);
+    int pause_threshold = std::stoi(argv[5]);
+    int hits = 0;
+    int fails = 0;
+    bool pause_counting = false;
+    int pause_count = 0;
+    int consecutive_fails = 0;
+    double estimated_bits = 0;
+    double prob = 0;
+    string data = read_file(filename);
+    std::map<std::string, std::vector<int>> chunk_positions;
+    std::vector<std::string> chunks;
 
     for (int i = 0; i < data.size() - k; ++i)
     {
         std::string current_chunk = data.substr(i, k);
         chunks.push_back(current_chunk);
-        
-        // if current_chunk not in hashmap then add to hashmap and go to next iteration
-        if (chunk_positions.find(current_chunk) == chunk_positions.end())  {
-            chunk_positions[current_chunk] = std::vector<int>{i}; // add K-string to hashmap
+        cout << "Current chunk: " << current_chunk << endl;
+
+        if (chunk_positions.find(current_chunk) == chunk_positions.end()) {
+            chunk_positions[current_chunk] = std::vector<int>{i};
             continue;
         }
 
-        // add the chunk's current position to the hashmap
         chunk_positions[current_chunk].push_back(i);
-        
-        // if EOF reached then break
+
         if (i + k >= data.size())
             break;
 
-        // get the solution (last char of next chunk)
         char solution = data[(i+k)-1];
-
-        // make a prediction for the last char of the next chunk
         char prediction = predict_char(chunk_positions[current_chunk], chunks);
 
-        // update results
-        prediction == solution ? hits++ : fails++;
+        if (pause_counting) {
+            pause_count++;
+
+            if (prediction == solution) hits++;
+
+            if (pause_count >= pause_threshold) {
+                pause_counting = false;
+                pause_count = 0;
+            }
+        } else {
+            if (prediction == solution) {
+                hits++;
+                consecutive_fails = 0;
+            } 
+            else {
+                fails++;
+                consecutive_fails++;
+
+                if (consecutive_fails >= fail_threshold){
+                pause_counting = true;
+                // remove position that passes threshold
+                chunk_positions.erase(chunk_positions.begin());
+                }
+            }
+
+        }
+            prob = (hits + alpha) / (hits + fails + 2 * alpha);
+            estimated_bits += -log2(prob);
     }
 
+    double total_symbols = data.size();
     cout << "Hits: " << hits << endl;
     cout << "Fails: " << fails << endl;
+
+    cout << "Estimated total bits: " << estimated_bits << endl;
+    cout << "Average bits per symbol: " << estimated_bits / total_symbols << endl;
+
     return 0;
 }
