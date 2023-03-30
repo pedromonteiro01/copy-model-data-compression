@@ -1,7 +1,6 @@
 # Algorithmic Information Theory - 1st Project
 
- Lab work nº1 --- Due: 22 Mar 2023 <br>
- (to be presented in the class of 24 Mar 2023)
+ Lab work nº1 --- Due: 29 Mar 2023 <br>
 
  > **1** **Copy models for data compression**
 
@@ -98,19 +97,14 @@
  accepts. It should also include, at least, how to run a concrete
  example.
 
- ```
-group_name
-├── Readme.md
-├── src
-│   ├── ...
-│   └── ...
-├── example
-│   ├── ...
-│   └── ...
-├── bin
-│   ├── ...
-│   └── ...
-├── report
-│   ├── ...
-│   └── ...
+## How to run it
+
+Compile
+```
+g++ -std=c++11 cpm.cpp -o cpm
+```
+
+Just run the executable file
+```
+./cpm <filename> <k> <alpha> <fail_threshold>
 ```
