@@ -108,30 +108,6 @@ std::string generate_text(std::map<std::string, std::map<char, int>> char_counti
     return text;
 }
 
-double calculate_entropy(const std::map<std::string, std::map<char, int>>& char_counting) {
-    double entropy = 0.0;
-    int num_chunks = 0;
-
-    for (const auto& chunk_map : char_counting) {
-        int total_chars = 0;
-        for (const auto& char_map : chunk_map.second) {
-            total_chars += char_map.second;
-        }
-
-        for (const auto& char_map : chunk_map.second) {
-            double probability = static_cast<double>(char_map.second) / total_chars;
-            entropy += probability * std::log2(probability);
-        }
-
-        num_chunks++;
-    }
-
-    // Calculate average entropy
-    entropy = -entropy / num_chunks;
-
-    return entropy;
-}
-
 int main(int argc, char* argv[])
 {
     if (argc < 4) {
@@ -147,10 +123,6 @@ int main(int argc, char* argv[])
     std::vector<std::string> chunks;
 
     load_map(k, data, char_counting, chunks);
-
-    // Calculate and print the entropy
-    double entropy = calculate_entropy(char_counting);
-    cout << "Entropy for k = " << k << ": " << entropy << endl;
 
     // Seed the random number generator
     std::srand(std::time(nullptr));
