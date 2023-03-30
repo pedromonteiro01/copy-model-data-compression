@@ -1,9 +1,0 @@
-get_most_frequent_next_char()
-
-HASHMAP: "TAGGC": [5,45,...]
-
-0. inicializar counter["simbolo"] = count
-1. Iterar sobre as posições guardadas no hashmap
-2. next_char = array[i+1][-1] // em cada iteração obter o último char da posição seguinte
-3. incrementar o contador para esse simbolo
-4. retornar simbolo mais frequente.

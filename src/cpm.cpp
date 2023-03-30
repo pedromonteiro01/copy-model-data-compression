@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
                 else
                 {
                     //cout << "Deleting chunk from map" << endl;
-                    chunk_positions.erase(chunk_positions.begin());
+                    chunk_positions[current_chunk].erase(chunk_positions[current_chunk].begin());
                 }
             }
             else
