@@ -65,7 +65,6 @@ int main(int argc, char *argv[])
         // extract k length chunk from the file and add it to the vector of chunks
         std::string current_chunk = data.substr(i, k);
         chunks.push_back(current_chunk);
-        //cout << "Current chunk: " << current_chunk << endl;
 
         // if the current chunk is not in the map add it to the map
         if (chunk_positions.find(current_chunk) == chunk_positions.end())
@@ -83,20 +82,12 @@ int main(int argc, char *argv[])
 
         // get the actual next character and the predicted next character
         char solution = data[(i + k)];
-        //cout << "Solution: " << solution << endl;
 
         char prediction = predict_char(chunk_positions[current_chunk], chunks);
-        //cout << "Prediction: " << prediction << endl;
 
         if (prediction == solution)
         {
             hits++;
-            int key = chunk_positions[current_chunk].front();
-            auto it = positions_count.find(key);
-            /*if (it != positions_count.end())
-            {
-                it->second = 0;
-            }*/
         }
         else
         {
@@ -112,7 +103,6 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                    //cout << "Deleting chunk from map" << endl;
                     chunk_positions[current_chunk].erase(chunk_positions[current_chunk].begin());
                 }
             }
@@ -125,9 +115,7 @@ int main(int argc, char *argv[])
 
         // calculate the probability of a correct prediction and update the estimated total number of bits
         prob = (hits + alpha) / (hits + fails + 2 * alpha);
-        // cout << "Probability of the next prediction: " << prob << endl;
         estimated_bits += -log2(prob);
-        // cout << "Estimated Bits: " << -log2(prob) << endl;
     }
 
     double total_symbols = data.size();
